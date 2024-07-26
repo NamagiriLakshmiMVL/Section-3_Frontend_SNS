@@ -14,7 +14,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 const LoginPage = () => {
   const styles = {
-    color: "darkred",
+    color: "black",
     fontWeight: 630,
   };
   return (

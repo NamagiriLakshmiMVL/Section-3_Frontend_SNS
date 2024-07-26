@@ -11,9 +11,10 @@ import {
 import { API } from "../API";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import { CircularProgress } from "@chakra-ui/react";
 const Login = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,22 +24,25 @@ const Login = () => {
       email,
       password,
     };
-
+    await setIsLoading(true);
     await axios.post(`${API}/users/login`, details).then((res) => {
       res.data.message === "Invalid Credentials"
         ? toast.error("Invalid Credentials", {
-            position: "top-center",
+            position: "top-right",
             autoClose: 1000,
           })
         : toast.success(res.data.message, {
-            position: "top-center",
+            position: "top-right",
             autoClose: 1000,
           }) && navigate("/home");
+
       localStorage.setItem("x-auth-token", res.data.token);
+      setIsLoading(false);
     });
   };
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
+      {isLoading === true && <CircularProgress isIndeterminate />}
       <VStack spacing={"5px"}>
         <FormControl id="email" isRequired>
           <FormLabel>Email</FormLabel>

@@ -11,9 +11,11 @@ import React, { useState } from "react";
 import { API } from "../API";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@chakra-ui/react";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +26,7 @@ const Signup = () => {
       email,
       password,
     };
+    await setIsLoading(true);
     await axios.post(`${API}/users/signup`, details).then((res) => {
       res.data.message === "User Created Successfully"
         ? toast.success(res.data.message, {
@@ -35,10 +38,12 @@ const Signup = () => {
             autoClose: 1000,
           });
       localStorage.setItem("x-auth-token", res.data.token);
+      setIsLoading(false);
     });
   };
   return (
     <form onSubmit={(e) => handleSubmit(e)}>
+      {isLoading === true && <CircularProgress isIndeterminate />}
       <VStack spacing={"5px"}>
         <FormControl id="first-name" isRequired>
           <FormLabel>Name</FormLabel>
